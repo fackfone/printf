@@ -1,89 +1,45 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdarg.h>
 #include "holberton.h"
+
 /**
- * print_int - Prints integer
- * @va_list: list of argments
- * Return: the value pointed by va_list
+ *_printf - Print a formatted string
+ *@format: format string
+ *Return: number of characters printed
  */
-void print_int(va_list list)
-{
-	int value; 
-	int *ptr;
-
-	value = (va_arg(list, int));
-	ptr = &value;
-	write(1, ptr, 1);
-}
-/**
- * print_char - Prints character
- * @va_list: list of argments
- * Return: the value pointed by va_list
- */ 
-void print_char(va_list list)
-{
-	putchar((char)va_arg(list, int));
-}
-/**
- * print_string - Prints string
- * @va_list: list of argments
- * Return: the value pointed by va_list
- */ 
-void print_string(va_list list)
-{
-	int i = 0;
-	char *s;
-
-	s = va_arg(list, char *);
-	if (s != NULL)
-	{
-		for (i = 0; s[i] != '\0'; i++)
-			putchar(s[i]);
-	}
-}
-
-/**
- * _printf - Prints arguments passed in the function
- * @format: First argument
- * Return: NOTHING
- */
-
 int _printf(const char *format, ...)
 {
-	va_list content;
-	unsigned int i = 0, j;
+	int (*print_function)(va_list, param_func *);
+	va_list list;
+	const char *pointer;
+	param_func flags = {0, 0, 0};
 
-	datatype func[] = {
-		{ "c", print_char},
-		{ "d", print_int},
-		{ "s", print_string},
-		{NULL, NULL}
-	};
-	va_start(content, format);
+	register int count = 0;
 
-	while (format && format[i])
+	va_start(list, format);
+	if (!format || (format[0] == '%' && !format[1]))
+		return (-1);
+	if (format[0] == '%' && format[1] == ' ' && !format[2])
+		return (-1);
+	for (pointer = format; *pointer; pointer++)
 	{
-		if(format[i] == '%')
+		if (*pointer == '%')
 		{
-			j = 0;
-			while(j < 3)
+			pointer++;
+			if (*pointer == '%')
 			{
-				if(*func[j].type == format[i + 1])
-					func[j].action(content);
-				j++;
+				count += _putchar('%');
+				continue;
 			}
-			if(format[i + 1] == '%')
-			{
-				write(1,&format[i + 1], 1);
-			}
-			i += 2;
-			continue;
+			while (get_flags(*pointer, &flags))
+				pointer++;
+			print_function = func_parse(*pointer);
+			count += (print_function)
+						 ? print_function(list, &flags)
+						 : _printf("%%%c", *pointer);
 		}
-		write(1,&format[i], 1);
-		i++;
+		else
+			count += _putchar(*pointer);
 	}
-	va_end(content);
-	return (i);
-	
+	_putchar(-1);
+	va_end(list);
+	return (count);
 }

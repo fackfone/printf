@@ -1,17 +1,4 @@
-# WHAT THE PROGRAMS DO :octocat:
+**Alx project 0x11. C - printf**
 
-:zero: 0-sum_them_all.c returns the sum of all its parameters
+This is tagged a group project with two members each - With the aim of creating our own C printf function from scratch modeling the the version in the stdio.h standard library.
 
-:one: 1-print_numbers.c prints all his numbers as parameters
-
-:two: 2-print_strings.c prints all the strings as arguments
-
-:three: 3-print_all.c prints anything we passed into it
-
-# ADVANCED :arrow_upper_right:
-
-:one::zero::zero: 100-hello_holberton.asm
-
-
-******************************************************************************************************
-> ***Powered by *fackfone* for ALX - HOLBERTON SOFTWARE ENGINEERING Cohort 3 June 2021***
